@@ -29,7 +29,7 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login") // 커스텀 로그인 페이지
-                .defaultSuccessUrl("/products", true)
+                .defaultSuccessUrl("/products?login", true)
                 .permitAll()
             )
             .logout(logout -> logout

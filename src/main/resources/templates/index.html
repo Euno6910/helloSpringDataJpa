@@ -9,8 +9,17 @@
 
 <body>
 <div class="container">
-  <div class="d-flex justify-content-end mt-3 mb-3">
-    <form th:action="@{/logout}" method="post">
+  <!-- 로그인 성공 알림 -->
+  <div th:if="${param.login}" class="alert alert-success alert-dismissible fade show" role="alert" id="loginAlert">
+    <span sec:authentication="name"></span>님 환영합니다!
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+
+  <div class="d-flex justify-content-end mt-3 mb-3 align-items-center">
+    <span sec:authorize="hasRole('ADMIN')">
+      <a class="btn btn-warning me-2" th:href="@{/admin/users}">관리자 페이지</a>
+    </span>
+    <form th:action="@{/logout}" method="post" class="mb-0">
       <button type="submit" class="btn btn-outline-danger">로그아웃</button>
     </form>
   </div>
@@ -48,5 +57,17 @@
 
 <!-- Bootstrap JS fragment 삽입 -->
 <div th:insert="~{common :: commonScript}"></div>
+<script>
+  // 로그인 알림이 있으면 3초 후 자동으로 사라지게 설정
+  document.addEventListener('DOMContentLoaded', function() {
+    const loginAlert = document.getElementById('loginAlert');
+    if (loginAlert) {
+      setTimeout(function() {
+        const alert = bootstrap.Alert.getOrCreateInstance(loginAlert);
+        alert.close();
+      }, 3000);
+    }
+  });
+</script>
 </body>
 </html>

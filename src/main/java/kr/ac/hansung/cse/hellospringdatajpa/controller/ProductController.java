@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -47,10 +49,15 @@ public class ProductController {
     // @RequestBody는 HTTP 요청 본문에 포함된
     //  JSON 데이터(예: {"name": "Laptop", "brand": "Samsung", "madeIn": "Korea", "price": 1000.00})를 Product 객체에 매핑
     @PostMapping("/save")
-    public String saveProduct(@ModelAttribute("product") Product product) {
-
+    public String saveProduct(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            if (product.getId() == null) {
+                return "new_product";
+            } else {
+                return "edit_product";
+            }
+        }
         service.save(product);
-
         return "redirect:/products";
     }
 
